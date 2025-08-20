@@ -31,7 +31,7 @@ enum planck_layers {
 enum planck_keycodes {
   QWERTY = SAFE_RANGE,
   PLOVER,
-  EXT_PLV
+  EXT_PLV,
 };
 
 #define LOWER MO(_LOWER)
@@ -46,7 +46,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TAB,   KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_DEL,
     ESCCTRL,  KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, QUOTALT,
     KC_LSFT,  KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, SHFTENT,
-    KC_LCTL,  PLOVER, KC_LGUI, KC_LALT,  LOWER,   KC_SPC,  KC_SPC,  RAISE,   KC_RCTL, KC_VOLD, KC_VOLU, KC_KB_MUTE
+    KC_LCTL,  PLOVER, KC_LGUI, KC_LALT,  LOWER,   KC_SPC,  KC_SPC,  RAISE,   KC_RCTL, KC_VOLD, KC_VOLU, KC_MUTE
 ),
 [_LOWER] = LAYOUT_planck_grid(
     _______, _______, KC_PGUP, KC_UP,    KC_PGDN, _______, _______, KC_7,    KC_8,    KC_9,   _______, _______,
@@ -63,10 +63,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 ),
 
 [_PLOVER] = LAYOUT_planck_grid(
-    KC_1,    KC_1,    KC_1,    KC_1,    KC_1,    KC_1,    KC_1,    KC_1,    KC_1,    KC_1,    KC_1,    KC_1   ,
-    XXXXXXX, KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC,
-    XXXXXXX, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
-    EXT_PLV, XXXXXXX, XXXXXXX, KC_C,    KC_V,    XXXXXXX, XXXXXXX, KC_N,    KC_M,    XXXXXXX, XXXXXXX, XXXXXXX
+    _______, STN_S1,   STN_TL, STN_PL, STN_HL, STN_ST1, STN_ST3,  STN_FR, STN_PR,  STN_LR,  STN_TR, STN_DR,
+    _______, STN_S2,   STN_KL, STN_WL, STN_RL, STN_ST2, STN_ST4,  STN_RR, STN_BR,  STN_GR,  STN_SR, STN_ZR,
+    _______, _______, _______, _______,_______, _______, _______,_______,_______, _______, _______, _______,
+    EXT_PLV, _______, _______, STN_A,   STN_O, _______, _______,   STN_E,  STN_U, _______, _______, _______
 ),
 
 [_ADJUST] = LAYOUT_planck_grid(
@@ -86,6 +86,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 layer_state_t layer_state_set_user(layer_state_t state) {
   return update_tri_layer_state(state, _LOWER, _RAISE, _ADJUST);
 }
+
+
+bool tmp_qwerty = false;
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
@@ -115,8 +118,28 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         #endif
         layer_off(_PLOVER);
       }
+      tmp_qwerty = false;
       return false;
       break;
+    // case KC_SPC:
+    //   if (record->event.pressed){
+    //     if (layer_state_is(_PLOVER)){
+    //       layer_off(_PLOVER);
+    //       SEND_STRING(" ");
+    //       tmp_qwerty = true;
+    //       return false;
+    //     } else if (tmp_qwerty) {
+    //       layer_off(_RAISE);
+    //       layer_off(_LOWER);
+    //       layer_off(_ADJUST);
+    //       layer_on(_PLOVER);
+    //       tmp_qwerty = false;
+    //       return false;
+    //     }
+    //   } 
+    //   return true;
+    //   break;
+
   }
   return true;
 }
